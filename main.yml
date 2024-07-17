@@ -1,0 +1,61 @@
+name: Deploy Django Project
+
+on:
+  push:
+    branches:
+      - master  # Adjust as needed based on your branch structure
+      - main    # Adjust as needed based on your branch structure
+  pull_request:
+    branches:
+      - master  # Adjust as needed based on your branch structure
+      - main    # Adjust as needed based on your branch structure
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.9
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Collect static files
+        run: |
+          python manage.py collectstatic --noinput
+
+      - name: Deploy to GitHub Pages
+        if: github.event_name == 'push'  # Deploy only on push events
+        env:
+          ACTIONS_DEPLOY_KEY: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+        run: |
+          echo "Deploying Django project"
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
+          
+          # Check if the gh-pages branch exists and create it if not
+          if git show-ref --quiet refs/heads/gh-pages; then
+            git checkout gh-pages
+          else
+            git checkout --orphan gh-pages
+          fi
+          
+          # Clear old files in the gh-pages branch
+          rm -rf ./*
+          
+          # Copy new static files to the gh-pages branch
+          cp -r staticfiles/* .
+          
+          # Commit and push changes to the gh-pages branch
+          git add .
+          git commit -m "Deploy static files"
+          git push -f https://${{ secrets.ACTIONS_DEPLOY_KEY }}@github.com/MihaiGPuiu/Whiskey-Index.git gh-pages
