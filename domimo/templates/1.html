@@ -1,0 +1,362 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <style>
+        /* Container style */
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            padding: 20px; /* Optional padding for better visual spacing */
+        }
+
+        /* Apartment list style */
+        .apartment-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            width: 100%; /* Make sure it takes the full width of the container */
+        }
+
+        /* Individual apartment box style */
+        .apartment-box {
+            position: relative;
+            border: 1px solid #ddd;
+            margin: 10px;
+            padding: 10px;
+            border-radius: 10px;
+            width: calc(20% - 20px); /* Adjusted width to fit 4 boxes per row */
+            box-sizing: border-box;
+            transition: transform 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Apartment image style */
+        .apartment-image {
+            width: 100%;
+            height: 200px;
+            border-radius: 10px;
+            cursor: pointer;
+            object-fit: cover;
+        }
+
+        /* Apartment details style */
+        .apartment-details {
+            padding: 10px;
+            flex-grow: 1;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* Apartment title style */
+        .apartment-title {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .navbar ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar ul li {
+            margin-right: 20px; /* Adjust the margin to control the space between links */
+            list-style: none;
+        }
+
+        .navbar ul li a {
+            text-decoration: none;
+            color: #ffffff; /* White text color */
+            padding: 10px;
+            display: block;
+            font-family: Helvetica, sans-serif;
+            font-size: 16px;
+            font-style: italic;
+            font-weight: normal;
+        }
+
+        .apartment-address {
+            font-size: 18px;
+            color: #555;
+        }
+
+        .favorite-btn {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 24px;
+        }
+
+        .favorite-btn .fa-heart {
+            color: #ff0000; /* Ensure the heart icon is red */
+        }
+
+        .apartment-price {
+            font-size: 33px;
+            color: black;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 5px;
+            border-radius: 5px;
+        }
+
+        .pagination {
+            margin-top: 20px;
+            text-align: center;
+            width: 100%;
+            list-style: none; /* Remove default list style */
+            padding: 0;
+        }
+
+        .pagination-item {
+            display: inline-block;
+            margin: 0 5px;
+        }
+
+        .pagination-item a {
+            display: block;
+            padding: 10px 15px;
+            text-decoration: none;
+            color: #333;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .pagination-item__active a {
+            background-color: #4CAF50;
+            color: white;
+            border-color: #4CAF50;
+        }
+
+        .pagination-item a:hover {
+            background-color: #ddd;
+        }
+
+        .pagination-item__active a:hover {
+            background-color: #4CAF50;
+            border-color: #4CAF50;
+        }
+
+        .pagination-arrow {
+            padding: 10px 12px;
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .pagination-arrow:hover {
+            background-color: #ddd;
+        }
+
+        .pagination-arrow-disabled {
+            opacity: 0.5;
+            cursor: default;
+            pointer-events: none; /* Disable pointer events */
+        }
+
+        .pagination-arrow i {
+            font-size: 16px;
+        }
+
+        @media only screen and (max-width: 1200px) {
+            .apartment-box {
+                width: calc(33.33% - 20px); /* Adjust width to fit 3 boxes per row */
+            }
+        }
+
+        @media only screen and (max-width: 768px) {
+            .apartment-box {
+                width: calc(50% - 20px); /* Adjust width to fit 2 boxes per row */
+            }
+        }
+
+        @media only screen and (max-width: 480px) {
+            .apartment-box {
+                width: calc(100% - 20px); /* Adjust width to fit 1 box per row */
+            }
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            padding-top: 100px; /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0, 0, 0, 0.9); /* Black w/ opacity */
+        }
+
+        .modal-content {
+            margin: auto;
+            display: block;
+            width: 80%;
+            max-width: 700px;
+        }
+
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #fff;
+            font-size: 40px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #bbb;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+
+    <!-- Modal for larger image view -->
+    <div id="imageModal" class="modal">
+        <span class="close">&times;</span>
+        <img class="modal-content" id="modalImage">
+    </div>
+
+    <!-- Display no results message if there is one -->
+    {% if no_results_message %}
+    <p style="font-size: 18px; color: black; font-weight: bold; background-color: rgba(245, 0, 0, 0.1); width: 100%; text-align: center; padding: 20px;">
+        {{ no_results_message }}
+    </p>
+    {% endif %}
+
+    <!-- Display search results -->
+    {% if apartments %}
+    <div class="apartment-list">
+        {% for apartment in apartments %}
+        <div class="apartment-box">
+            <img src="{{ apartment.image }}" alt="{{ apartment.title }}" class="apartment-image" onclick="showModal('{{ apartment.image }}')">
+            <div class="apartment-details">
+                <div class="apartment-title">{{ apartment.title }}</div>
+                <div class="apartment-address">{{ apartment.city }} - {{ apartment.surface }}</div>
+                <div class="apartment-price">{{ apartment.price }}</div>
+                <form action="{% url 'toggle_favorite' apartment.id %}" method="POST" class="favorite-form">
+                    {% csrf_token %}
+                    {% if apartment.is_favorite %}
+                        <button type="submit" class="favorite-btn text-danger" title="Remove from Favorites">
+                            <i class="fa fa-heart"></i> <!-- FontAwesome filled heart icon -->
+                        </button>
+                    {% else %}
+                        <button type="submit" class="favorite-btn" title="Add to Favorites">
+                            <i class="fa fa-heart"></i> <!-- FontAwesome heart icon -->
+                        </button>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+
+
+    <!-- Pagination links -->
+    <ul class="pagination">
+        {% if apartments.paginator.num_pages > 1 %}
+            {% if apartments.number > 1 %}
+                <li class="pagination-item">
+                    <a href="?page=1{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.filter_title %}&filter_title={{ request.GET.filter_title }}{% endif %}{% if request.GET.filter_city %}&filter_city={{ request.GET.filter_city }}{% endif %}">
+                        <i class="fas fa-angle-double-left"></i>
+                    </a>
+                </li>
+                <li class="pagination-item">
+                    <a href="?page={{ apartments.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.filter_title %}&filter_title={{ request.GET.filter_title }}{% endif %}{% if request.GET.filter_city %}&filter_city={{ request.GET.filter_city }}{% endif %}">
+                        <i class="fas fa-angle-left"></i>
+                    </a>
+                </li>
+            {% else %}
+                <li class="pagination-item pagination-arrow pagination-arrow-disabled">
+                    <span><i class="fas fa-angle-double-left"></i></span>
+                </li>
+                <li class="pagination-item pagination-arrow pagination-arrow-disabled">
+                    <span><i class="fas fa-angle-left"></i></span>
+                </li>
+            {% endif %}
+
+            {% for num in apartments.paginator.page_range %}
+                {% if num >= apartments.number|add:-5 and num < apartments.number|add:5 %}
+                    {% if num == apartments.number %}
+                        <li class="pagination-item pagination-item__active"><span>{{ num }}</span></li>
+                    {% else %}
+                        <li class="pagination-item">
+                            <a href="?page={{ num }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.filter_title %}&filter_title={{ request.GET.filter_title }}{% endif %}{% if request.GET.filter_city %}&filter_city={{ request.GET.filter_city }}{% endif %}">
+                                {{ num }}
+                            </a>
+                        </li>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+
+            {% if apartments.has_next %}
+                <li class="pagination-item">
+                    <a href="?page={{ apartments.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.filter_title %}&filter_title={{ request.GET.filter_title }}{% endif %}{% if request.GET.filter_city %}&filter_city={{ request.GET.filter_city }}{% endif %}">
+                        <i class="fas fa-angle-right"></i>
+                    </a>
+                </li>
+                <li class="pagination-item">
+                    <a href="?page={{ apartments.paginator.num_pages }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.filter_title %}&filter_title={{ request.GET.filter_title }}{% endif %}{% if request.GET.filter_city %}&filter_city={{ request.GET.filter_city }}{% endif %}">
+                        <i class="fas fa-angle-double-right"></i>
+                    </a>
+                </li>
+            {% else %}
+                <li class="pagination-item pagination-arrow pagination-arrow-disabled">
+                    <span><i class="fas fa-angle-right"></i></span>
+                </li>
+                <li class="pagination-item pagination-arrow pagination-arrow-disabled">
+                    <span><i class="fas fa-angle-double-right"></i></span>
+                </li>
+            {% endif %}
+        {% endif %}
+    </ul>
+    {% endif %}
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get the modal
+        var modal = document.getElementById("imageModal");
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+
+        // Function to show the modal
+        window.showModal = function(imageUrl) {
+            var modalImage = document.getElementById("modalImage");
+            modalImage.src = imageUrl;
+            modal.style.display = "block";
+        }
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    });
+</script>
+{% endblock %}

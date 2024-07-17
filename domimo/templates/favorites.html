@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>My Favorites</h1>
+  {% for apartment in favorites %}
+    <div>
+      <h2>{{ apartment.title }}</h2>
+      <p>{{ apartment.city }}</p>
+      <p>{{ apartment.surface }}</p>
+      <p>{{ apartment.price }}</p>
+      <img src="{{ apartment.image }}" alt="{{ apartment.title }}">
+      <form action="{% url 'toggle_favorite' apartment.id %}" method="POST">
+        
+        {% csrf_token %}
+        <button type="submit">Remove from Favorites</button>
+      </form>
+    </div>
+  {% endfor %}
+{% endblock %}

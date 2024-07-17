@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My Website{% endblock %}</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+            margin: 0;
+        }
+        .navbar {
+            width: 100%;
+            padding: 10px 20px;
+            background-color: #f8f8f8;
+            border-bottom: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+        .navbar ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .navbar ul li {
+            display: inline;
+        }
+        .navbar ul li a {
+            text-decoration: none;
+            color: #333;
+            padding: 10px;
+            display: block;
+        }
+        .search-bar {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+            width: 100%;
+        }
+        .search-bar input[type="text"] {
+            padding: 5px;
+            max-width: 400px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin: 0 auto; /* Center horizontally */
+        }
+        
+       
+        .search-bar button {
+            background-color: #008CBA;
+            border: none;
+            color: white;
+            padding: 5px 21px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+ 
+        
+        
+        
+        
+        
+        
+        
+        
+       
+        .container {
+            width: 80%;
+            max-width: 800px;
+            margin-top: 20px;
+        }
+        .apartment-box {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 50px;
+            display: flex;
+            align-items: flex-end;
+        }
+        .apartment-image {
+            width: 100px;
+            height: 100px;
+            margin-right: 20px;
+        }
+        .apartment-details {
+            flex-grow: 1;
+        }
+        .apartment-title {
+            font-weight: bold;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        .apartment-address {
+            margin-bottom: 10px;
+        }
+        .apartment-surface {
+            margin-bottom: 10px;
+        }
+        .apartment-price {
+            font-size: 18px;
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <ul>
+            <li> <a href="/">
+                <img src="logo.png" alt="Logo">
+            </a>
+            
+            
+        </ul>
+        
+    </div>
+    <div class="search-bar">
+        <form action="#" method="get">
+            <input type="text" name="search" placeholder="Search apartments...">
+            <button type="submit" class="button">Search</button>
+        </form>
+    </div>
+    <div class="content">
+        {% block content %}
+        {% endblock %}
+    </div>
+</body>
+</html>

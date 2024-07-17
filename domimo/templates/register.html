@@ -1,0 +1,21 @@
+<{% extends "base.html" %}
+    
+<h2>Register</h2>
+    <!-- Display success or error messages -->
+    {% if messages %}
+        <ul>
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    <!-- Registration form -->
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Register</button>
+    </form>
+    <a href="{% url 'login' %}">Already have an account? Log in</a>
+</body>
+</html>
+{% endblock %}

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Domimo{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+    <style>
+        
+        body {
+            padding-top: 80px
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh; /* Full height of the viewport */
+            padding: 20px;
+            box-sizing: border-box;
+            margin: 0;
+            background-color: rgba(255, 255, 255, 0.8)  
+           
+        }
+       
+
+        .navbar {
+            width: 100%;
+            padding: 10px 20px;
+            background-color: white;
+            border-bottom: 1px solid #ccc;
+            box-sizing: border-box;
+            position: absolute;
+            top: 0;
+        }
+        .navbar ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .navbar ul li {
+            display: inline;
+        }
+        .navbar ul li a {
+            text-decoration: none;
+            color: #222222;
+            padding: 10px;
+            display: block;
+        }
+        .search-bar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            max-width: 600px;
+            margin: auto;
+        }
+        .search-bar input[type="text"] {
+            padding: 15px;
+            width: 50%;
+            border: 1px solid #ccc;
+            border-radius: 11px 0 0 13px;
+            font-size: 18px;
+            margin: 0;
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+        .search-bar select {
+            padding: 15px;
+            width: 20%;
+            border: 1px solid #ccc;
+            border-radius: 0;
+            font-size: 18px;
+            margin: 0;
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+        .search-bar button {
+            background-color: rgba(255, 0, 0, 0.8); /* Red color with 80% opacity */
+            border: none;
+            color: white;
+            padding: 15px;
+            font-size: 18px;
+            border-radius: 0 11px 13px 0;
+            cursor: pointer;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            margin-top: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-right: 20px; /* Adjust the padding as needed */
+            width: 50px; /* Adjust the width of the container */
+            margin-right: 20px; /* Add margin to create space between containers */
+            height: 70px; /* Set the height of the container */
+        }
+       
+        .apartment-image {
+            width: 50%; /* Make image width 100% of the container width */
+            height: auto; /* Maintain aspect ratio */
+            border-radius: 15px; /* Add border radius */
+            object-fit: cover;
+        }
+    @media only screen and(max=width:400px){
+        /* General styles for the apartment boxes */
+         .apartment-box {
+            border: 19px solid #ddd;
+            margin: 20px; /* Increase margin for bigger spacing */
+            padding: 10px; /* Adjust padding as needed */
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            background-color: white; /* Ensure the background is white */
+            width: 800px; /* Adjust the width for smaller boxes */
+            flex-direction: row; /* Ensure content stacks vertically */
+            margin-right: 670px; /* Add more margin to the right */
+        }
+    }
+        .apartment-details {
+            flex-grow: 1;
+            margin-top: 10px; /* Add some spacing between image and details */
+            text-align: center; /* Center-align text */
+        }
+        
+        .apartment-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .apartment-address,
+.apartment-price {
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+
+.apartment-price {
+    color: black;
+    background-color: rgba(255, 255, 255, 0.8);
+    margin-top: 10px; /* Add some spacing above the price */
+}
+
+.form-container {
+    background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white background */
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Optional: Add shadow for depth */
+    width: 100%;
+    max-width: 600px; /* Adjust max-width as needed */
+    margin: auto; /* Center the form container */
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-control {
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    font-size: 18px;
+    margin: 0 0 10px 0; /* Add bottom margin to space out the inputs */
+    background-color: rgba(255, 255, 255, 0.8);
+    width: 100%; /* Full width of the container */
+}
+
+.btn-primary {
+    background-color: rgba(255, 0, 0, 0.8);
+    border: none;
+    color: white;
+    padding: 15px;
+    font-size: 18px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    text-align: center; /* Ensure the text is centered */
+}
+
+.btn-primary:hover {
+    background-color: rgba(255, 0, 0, 1);
+}
+
+h2.text-center {
+    text-align: center;
+    margin-bottom: 20px; /* Space out the heading */
+}
+        
+    </style>
+
+</head>
+<body class="{% block body_class %}{% endblock %}">
+    <div class="navbar">
+        <ul>
+            <li><a href="/"><img src="https://i.ibb.co/59pzsq3/logo-no-background.png" alt="Logo" style="width: 100px; height: auto;"></a></li>
+           
+            <div class="search-bar">
+
+                <form action="{% url 'search' %}" method="get" style="display: flex; width: 100%;">
+                    <input type="text" name="search" placeholder="Cauta..." value="{{ request.GET.search }}">
+                    <button type="submit">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </form>
+            </div>
+        </ul>
+    </div>
+    
+    <div class="content">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <script src="index.js"></script>
+</body>
+</html>

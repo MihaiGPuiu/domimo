@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}
+Apartment Listings
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    {% for apartment in apartments %}
+    <div class="apartment-box">
+        <img src="{{ apartment.image }}" alt="{{ apartment.title }}" class="apartment-image">
+        <div class="apartment-details">
+            <div class="apartment-title">{{ apartment.title }}</div>
+            <div class="apartment-address">{{ apartment.city }}</div>
+            <div class="apartment-surface">Surface: {{ apartment.surface }}</div>
+            <div class="apartment-price">{{ apartment.price }}</div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
